@@ -72,6 +72,14 @@ This tree carries everything needed to build itself on the phone — see [`docs/
 - Local/on-device build adaptations are included: Aliyun maven mirrors, `ndkVersion` commented out + `keepDebugSymbols` (no NDK on device → skip strip), explicit `buildToolsVersion`, `local-build.sh`.
 - The app version number tracks the upstream **sing-box** version.
 
+## Releases & CI
+
+- Publishing a GitHub **Release** triggers [`release.yml`](.github/workflows/release.yml): it builds a **signed `arm64-v8a`** APK and attaches it (plus SHA-256) to the release. Manual runs via *workflow_dispatch* upload the APK as a workflow artifact.
+- Signing material is provided through repository secrets (never committed):
+  - `KEYSTORE_BASE64` — base64 of the keystore (decoded to `app/release.keystore` during the build),
+  - `LOCAL_PROPERTIES` — base64 of a Java `.properties` blob containing `KEYSTORE_PASS`, `ALIAS_NAME`, `ALIAS_PASS` (the same mechanism upstream SFA uses).
+- Local builds use the identical key: put the keystore at `app/release.keystore` and the same three properties into `local.properties`; then `./local-build.sh` (debug) and `./local-build.sh release` produce APKs signed with the same key as CI — mutually updatable.
+
 ## License
 
 SungBox is free software licensed under the **GNU General Public License v3.0 or later** — the same license as its upstream. See [LICENSE](LICENSE) (full text) and [NOTICE](NOTICE) (upstream copyright & additional terms).

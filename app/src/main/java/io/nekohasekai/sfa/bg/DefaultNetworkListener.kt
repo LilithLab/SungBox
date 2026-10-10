@@ -250,11 +250,19 @@ object DefaultNetworkListener {
 
         // [SungBox patch] 保活蜂窝（失败不影响主流程）
         runCatching {
-            Application.connectivity.requestNetwork(
-                cellularKeepAliveRequest,
-                cellularKeepAliveCallback,
-                callbackHandler,
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Application.connectivity.requestNetwork(
+                    cellularKeepAliveRequest,
+                    cellularKeepAliveCallback,
+                    callbackHandler,
+                )
+            } else {
+                // API 24-25：无 Handler 重载（回调在线程外派发，仅记录日志，可接受）
+                Application.connectivity.requestNetwork(
+                    cellularKeepAliveRequest,
+                    cellularKeepAliveCallback,
+                )
+            }
         }.onFailure {
             Log.w("DefaultNetworkListener", "cellular keep-alive request failed", it)
         }
