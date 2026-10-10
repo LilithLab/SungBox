@@ -2,11 +2,9 @@
 
 基于 [sing-box-for-android](https://github.com/SagerNet/sing-box-for-android)（SFA）的非官方 fork：**代理走蜂窝、直连走 WiFi、蜂窝断开即断网（fail-closed）**——为校园网等会深度检查流量的环境而做。
 
-> 名字：**sing → sung** —— 和 sing-box 只差一个元音，一眼看得出血缘，又完全分得开。
-
 ## 双网分流规则（核心）
 
-SungBox 的全部行为可以概括为一句话：**该走代理的流量只从蜂窝出，该直连的流量只从 WiFi 出；任何一边不可用时宁可失败，也不"换路"。**
+SungBox 的全部行为可以概括为：**该走代理的流量只从蜂窝出，该直连的流量只从 WiFi 出；任何一边不可用时宁可失败，也不换路。**
 
 ### 规则明细
 
