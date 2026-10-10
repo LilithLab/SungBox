@@ -50,3 +50,20 @@ chmod +x aidl
 - `gradle.properties`：JVM 4g、HTTP 超时 60s、Kotlin 编译 in-process；
 - `app/build.gradle.kts`：注释 `ndkVersion`（设备无 NDK）并加 `keepDebugSymbols`
   跳过 strip；显式 `buildToolsVersion 37.0.0`。
+
+## 5. 签名（本地与 GitHub Actions 一致）
+
+- 密钥文件放 `app/release.keystore`（`local-build.sh` 会自动从 `~/.jinmanji/jinmanji-release.jks` 复制；
+  该路径已被 `.gitignore` 忽略，密钥永不入库）。
+- 密码等三项放在项目根 `local.properties`（同样不入库）：
+
+  ```properties
+  KEYSTORE_PASS=******
+  ALIAS_NAME=jinmanji
+  ALIAS_PASS=******
+  ```
+
+- 本地 `./local-build.sh release` 产出 `SungBox-1.14.2-arm64-v8a.apk`，**签名与 CI 完全一致**（同一把钥匙，指纹 `75:2C:D6:69:8F:52:47:59:5E:8C:B0:17:9A:E5:60:D5:20:5E:23:A7:87:CF:23:68:9C:28:20:BB:F0:33:01:57`）。
+- CI（GitHub Actions）通过仓库机密注入：`KEYSTORE_BASE64`（密钥文件）+ `LOCAL_PROPERTIES`
+  （Base64 的 properties，上游 SFA 原生支持的机制）。
+- 注意：切换到该密钥后，此前用 debug 密钥安装的版本需要先卸载重装一次。

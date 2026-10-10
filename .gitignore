@@ -11,6 +11,7 @@ build/
 local.properties
 /app/libs/*
 !/app/libs/.gitkeep
+/app/release.keystore
 /service-account-credentials.json
 /CLAUDE.md
 /.claude/

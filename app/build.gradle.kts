@@ -132,9 +132,16 @@ android {
     splits {
         abi {
             isEnable = true
-            isUniversalApk = true
             reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            val abiOnly = project.findProperty("sungboxAbiOnly") as? String
+            if (abiOnly != null) {
+                // 仅产出指定 ABI（CI/本地 release 使用：-PsungboxAbiOnly=arm64-v8a）
+                isUniversalApk = false
+                include(abiOnly)
+            } else {
+                isUniversalApk = true
+                include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            }
         }
     }
 
